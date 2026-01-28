@@ -12,44 +12,40 @@
         .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
         
         @media print {
-            @page { 
-                size: A4; 
-                margin: 0; /* ব্রাউজারের ডিফল্ট হেডার/ফুটার দূর করার জন্য */
-            }
+            @page { size: A4; margin: 0; }
             html, body {
-                height: 100%;
+                height: 297mm;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: white !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
+                overflow: hidden; /* ব্ল্যাঙ্ক পেজ আসা বন্ধ করবে */
             }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
             
             #printable-area { 
-                position: absolute; 
+                position: fixed; 
                 left: 0; 
                 top: 0; 
                 width: 210mm; 
                 height: 297mm;
                 margin: 0;
                 padding: 0;
+                z-index: 9999;
             }
 
             .a4-container {
                 width: 210mm !important;
                 height: 297mm !important;
-                padding: 10mm !important; /* মার্জিন সামান্য কমিয়ে বর্ডার ঠিক করা হয়েছে */
+                padding: 15mm !important;
                 margin: 0 !important;
-                border: 6px double #000 !important; /* প্রফেশনাল ডাবল বর্ডার */
+                border: 4px double #000 !important;
+                box-shadow: none !important; /* প্রিন্টে শ্যাডো বাদ */
+                border-radius: 0 !important; /* প্রিন্টে শার্প কোণা */
                 box-sizing: border-box !important;
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
-                background: white !important;
-                overflow: hidden !important;
-                page-break-after: avoid !important;
             }
             .no-print { display: none !important; }
         }
@@ -65,7 +61,7 @@
         <div id="search-section" class="fade-in no-print">
             <div class="text-center mb-16">
                 <h1 class="text-4xl sm:text-6xl font-black text-slate-900 mb-6 tracking-tighter">Academic <span class="text-blue-600">Dashboard</span></h1>
-                <p class="text-slate-500 max-w-xl mx-auto font-medium leading-relaxed">Instantly access your examination performance data. Enter your academic credentials to generate your digital transcript.</p>
+                <p class="text-slate-500 max-w-xl mx-auto font-medium leading-relaxed">Instantly access your examination performance data.</p>
             </div>
 
             <div class="grid lg:grid-cols-2 gap-16 items-center">
@@ -73,20 +69,20 @@
                     <div class="grid grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Academic Year</label>
-                            <select id="year-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-bold text-sm appearance-none"></select>
+                            <select id="year-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold text-sm appearance-none"></select>
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Assigned Class</label>
-                            <select id="class-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-bold text-sm appearance-none"></select>
+                            <select id="class-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold text-sm appearance-none"></select>
                         </div>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Examination Category</label>
-                        <select id="exam-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-bold text-sm appearance-none"></select>
+                        <select id="exam-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold text-sm appearance-none"></select>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Student Roll / ID</label>
-                        <input type="text" id="roll-input" placeholder="e.g. 102204" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-bold">
+                        <input type="text" id="roll-input" placeholder="e.g. 102204" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold">
                     </div>
                     <button id="search-btn" class="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-black shadow-2xl hover:bg-slate-800 transition-all active:scale-95 flex items-center justify-center gap-3">
                         <i data-lucide="scan-text" class="w-6 h-6"></i> FETCH MARKSHEET
@@ -96,14 +92,8 @@
                 <div class="hidden lg:block space-y-8">
                     <div class="glass-card p-8 rounded-3xl shadow-xl -rotate-2 transform hover:rotate-0 transition-all duration-500">
                         <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><i data-lucide="cpu" class="w-7 h-7"></i></div>
-                            <div><h3 class="font-black text-slate-800 tracking-tight">Rapid Fetch</h3><p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Instant Data Retrieval</p></div>
-                        </div>
-                    </div>
-                    <div class="glass-card p-8 rounded-3xl shadow-xl rotate-3 ml-12 transform hover:rotate-0 transition-all duration-500">
-                        <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600"><i data-lucide="printer" class="w-7 h-7"></i></div>
-                            <div><h3 class="font-black text-slate-800 tracking-tight">Print Optimized</h3><p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Perfect A4 Formatting</p></div>
+                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><i data-lucide="printer" class="w-7 h-7"></i></div>
+                            <div><h3 class="font-black text-slate-800 tracking-tight">Print Ready</h3><p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Perfect A4 Layout</p></div>
                         </div>
                     </div>
                 </div>
@@ -125,7 +115,7 @@
 
         onAuthStateChanged(auth, user => {
             const nav = renderNavbar(user);
-            document.getElementById('nav-container').innerHTML = ''; // Clear and re-render
+            document.getElementById('nav-container').innerHTML = '';
             document.getElementById('nav-container').appendChild(nav);
             lucide.createIcons();
             if(user) {
