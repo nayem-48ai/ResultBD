@@ -8,46 +8,33 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #fcfcfd; }
+        body { font-family: 'Inter', sans-serif; background: #fcfcfd; margin: 0; }
         .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
         
         @media print {
             @page { size: A4; margin: 0; }
-            html, body {
-                height: 297mm;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
+            html, body { 
+                height: 297mm; 
                 overflow: hidden; /* ব্ল্যাঙ্ক পেজ আসা বন্ধ করবে */
+                background: white !important; 
             }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
-            
             #printable-area { 
-                position: fixed; 
+                position: absolute; 
                 left: 0; 
                 top: 0; 
                 width: 210mm; 
-                height: 297mm;
-                margin: 0;
+                height: 297mm; 
+                margin: 0; 
                 padding: 0;
-                z-index: 9999;
-            }
-
-            .a4-container {
-                width: 210mm !important;
-                height: 297mm !important;
-                padding: 15mm !important;
-                margin: 0 !important;
-                border: 4px double #000 !important;
-                box-shadow: none !important; /* প্রিন্টে শ্যাডো বাদ */
-                border-radius: 0 !important; /* প্রিন্টে শার্প কোণা */
-                box-sizing: border-box !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
             }
             .no-print { display: none !important; }
+            .a4-container {
+                box-shadow: none !important;
+                border: 4px double #000 !important;
+                border-radius: 0 !important;
+            }
         }
 
         .fade-in { animation: fadeIn 0.6s ease-out; }
@@ -69,20 +56,20 @@
                     <div class="grid grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Academic Year</label>
-                            <select id="year-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold text-sm appearance-none"></select>
+                            <select id="year-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none transition-all font-bold text-sm appearance-none"></select>
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Assigned Class</label>
-                            <select id="class-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold text-sm appearance-none"></select>
+                            <select id="class-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none transition-all font-bold text-sm appearance-none"></select>
                         </div>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Examination Category</label>
-                        <select id="exam-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold text-sm appearance-none"></select>
+                        <select id="exam-select" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none transition-all font-bold text-sm appearance-none"></select>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-1">Student Roll / ID</label>
-                        <input type="text" id="roll-input" placeholder="e.g. 102204" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none font-bold">
+                        <input type="text" id="roll-input" placeholder="e.g. 102204" class="w-full p-4 bg-white/50 border border-slate-200 rounded-2xl outline-none transition-all font-bold">
                     </div>
                     <button id="search-btn" class="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-black shadow-2xl hover:bg-slate-800 transition-all active:scale-95 flex items-center justify-center gap-3">
                         <i data-lucide="scan-text" class="w-6 h-6"></i> FETCH MARKSHEET
@@ -92,8 +79,8 @@
                 <div class="hidden lg:block space-y-8">
                     <div class="glass-card p-8 rounded-3xl shadow-xl -rotate-2 transform hover:rotate-0 transition-all duration-500">
                         <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><i data-lucide="printer" class="w-7 h-7"></i></div>
-                            <div><h3 class="font-black text-slate-800 tracking-tight">Print Ready</h3><p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Perfect A4 Layout</p></div>
+                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><i data-lucide="cpu" class="w-7 h-7"></i></div>
+                            <div><h3 class="font-black text-slate-800 tracking-tight">Rapid Fetch</h3><p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Instant Data Retrieval</p></div>
                         </div>
                     </div>
                 </div>
@@ -105,7 +92,7 @@
                 <button onclick="location.reload()" class="flex items-center gap-2 text-slate-400 hover:text-blue-600 font-black text-xs uppercase tracking-widest"><i data-lucide="chevron-left" class="w-5 h-5"></i> Back to search</button>
                 <button onclick="window.print()" class="bg-green-600 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-green-200 hover:bg-green-700 active:scale-95 flex items-center gap-2 transition-all"><i data-lucide="printer" class="w-4 h-4"></i> PRINT A4 MARKSHEET</button>
             </div>
-            <div id="printable-area"></div>
+            <div id="printable-area" class="flex justify-center"></div>
         </div>
     </main>
 
@@ -118,19 +105,14 @@
             document.getElementById('nav-container').innerHTML = '';
             document.getElementById('nav-container').appendChild(nav);
             lucide.createIcons();
-            if(user) {
-                const logoutBtn = document.getElementById('nav-logout-btn');
-                if(logoutBtn) logoutBtn.onclick = () => signOut(auth).then(() => location.reload());
-            }
+            if(user) document.getElementById('nav-logout-btn').onclick = () => signOut(auth).then(() => location.reload());
         });
 
         const yearsSet = new Set(), classesSet = new Set(), examsSet = new Set();
         getDocs(collection(db, "results")).then(snap => {
             snap.forEach(doc => {
                 const d = doc.data();
-                if(d.year) yearsSet.add(d.year); 
-                if(d.className) classesSet.add(d.className); 
-                if(d.examName) examsSet.add(d.examName);
+                yearsSet.add(d.year); classesSet.add(d.className); examsSet.add(d.examName);
             });
             populate('year-select', [...yearsSet].sort().reverse());
             populate('class-select', [...classesSet].sort());
@@ -138,8 +120,7 @@
         });
 
         const populate = (id, items) => {
-            const el = document.getElementById(id);
-            if(el) el.innerHTML = '<option value="">Select</option>' + items.map(i => `<option value="${i}">${i}</option>`).join('');
+            document.getElementById(id).innerHTML = '<option value="">Select</option>' + items.map(i => `<option value="${i}">${i}</option>`).join('');
         };
 
         document.getElementById('search-btn').onclick = async () => {
