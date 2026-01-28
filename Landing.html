@@ -12,24 +12,9 @@
         body { font-family: 'Inter', sans-serif; background: #fcfcfd; }
         .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
         @media print {
-            @page { size: A4; margin: 0; }
-            body { margin: 0; padding: 0; background: white !important; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
-            #printable-area { position: fixed; left: 0; top: 0; width: 210mm; height: 297mm; }
-            .a4-container {
-              width: 210mm !important;
-              height: 297mm !important;
-              padding: 15mm !important;
-              margin: 0 !important;
-              border: 4px double #000 !important;
-              box-shadow: none !important;
-              box-sizing: border-box !important;
-              display: flex !important;
-              flex-direction: column !important;
-              justify-content: space-between !important;
-              overflow: hidden !important;
-            }
+            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none !important; }
         }
         .fade-in { animation: fadeIn 0.6s ease-out; }
@@ -91,7 +76,7 @@
         <div id="result-view" class="hidden max-w-5xl mx-auto space-y-8 fade-in">
             <div class="flex justify-between items-center no-print px-4">
                 <button onclick="location.reload()" class="flex items-center gap-2 text-slate-400 hover:text-blue-600 font-black text-xs uppercase tracking-widest"><i data-lucide="chevron-left" class="w-5 h-5"></i> Back to search</button>
-                <button onclick="window.print()" class="bg-green-600 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-green-200 hover:bg-green-700 active:scale-95 flex items-center gap-2 transition-all"><i data-lucide="printer" class="w-4 h-4"></i> PRINT A4 MARKSHEET</button>
+                <button onclick="window.print()" class="bg-green-600 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-green-200 hover:bg-green-700 active:scale-95 flex items-center gap-2 transition-all"><i data-lucide="printer" class="w-4 h-4"></i> Download PDF</button>
             </div>
             <div id="printable-area"></div>
         </div>

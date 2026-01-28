@@ -271,9 +271,13 @@
 
         window.exportRecord = (id) => {
             const rec = recordsMap.get(id);
-            // Apply logical column ordering for export as well
-            const orderedHeaders = getOrderedHeaders(rec.headers, rec.data);
-            const ws = XLSX.utils.json_to_sheet(rec.data, { header: orderedHeaders });
+            const orderedKeys = getOrderedHeaders(rec.headers, rec.data);
+            const worksheetData = rec.data.map(row => {
+                const orderedRow = {};
+                orderedKeys.forEach(k => orderedRow[k] = row[k] || '');
+                return orderedRow;
+            });
+            const ws = XLSX.utils.json_to_sheet(worksheetData, { header: orderedKeys });
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Results");
             XLSX.writeFile(wb, `${id}.xlsx`);
