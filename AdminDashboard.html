@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - EduResult</title>
+    <title>EduResult - Admin Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.full.min.js"></script>
@@ -11,116 +11,146 @@
 </head>
 <body class="bg-slate-50 min-h-screen">
     <div id="nav-container"></div>
-    <main class="container mx-auto px-4 py-10 max-w-7xl">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Admin <span class="text-blue-600">Control</span></h1>
-            <div class="flex gap-2 bg-slate-200 p-1.5 rounded-2xl">
-                <button id="btn-up" class="px-6 py-2 rounded-xl font-bold text-xs uppercase bg-white shadow-sm">Upload</button>
-                <button id="btn-mg" class="px-6 py-2 rounded-xl font-bold text-xs uppercase text-slate-500">Manage</button>
+    <main class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+            <h1 class="text-3xl font-black text-slate-900 uppercase">Control <span class="text-blue-600">Panel</span></h1>
+            <div class="flex bg-slate-200 p-1.5 rounded-2xl shadow-inner">
+                <button id="tab-up" class="px-8 py-2.5 rounded-xl font-black bg-white text-blue-600 text-xs uppercase tracking-widest transition-all">Upload</button>
+                <button id="tab-mg" class="px-8 py-2.5 rounded-xl font-black text-slate-500 text-xs uppercase tracking-widest transition-all">Records</button>
             </div>
         </div>
 
-        <div id="v-up" class="grid lg:grid-cols-3 gap-8">
+        <div id="view-up" class="grid lg:grid-cols-3 gap-8">
             <div class="lg:col-span-1 space-y-6">
-                <div class="bg-white p-8 rounded-[2rem] shadow-xl space-y-4">
-                    <select id="sel-year" class="w-full p-4 border rounded-2xl font-bold"></select>
-                    <select id="sel-class" class="w-full p-4 border rounded-2xl font-bold"></select>
-                    <select id="sel-exam" class="w-full p-4 border rounded-2xl font-bold"></select>
-                    <div class="border-2 border-dashed rounded-2xl p-8 text-center relative group hover:border-blue-500 transition-all">
-                        <input type="file" id="file-in" class="absolute inset-0 opacity-0 cursor-pointer">
-                        <i data-lucide="upload-cloud" class="mx-auto mb-2 text-slate-300"></i>
-                        <p class="text-[10px] font-black uppercase text-slate-400">Excel File (.xlsx)</p>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 space-y-4">
+                    <select id="up-year" class="w-full p-4 border rounded-2xl font-bold"></select>
+                    <select id="up-class" class="w-full p-4 border rounded-2xl font-bold"></select>
+                    <select id="up-exam" class="w-full p-4 border rounded-2xl font-bold"></select>
+                    <div class="border-2 border-dashed border-slate-200 rounded-3xl p-10 text-center relative hover:border-blue-400 transition-all cursor-pointer">
+                        <input type="file" id="file-input" accept=".xlsx" class="absolute inset-0 opacity-0 cursor-pointer">
+                        <i data-lucide="cloud-upload" class="w-12 h-12 text-slate-300 mx-auto mb-4"></i>
+                        <p class="text-[10px] font-black text-slate-500 uppercase">Drop Excel Dataset</p>
                     </div>
-                    <button id="pub-btn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black hidden">PUBLISH DATA</button>
+                    <button id="publish-btn" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black hidden shadow-lg">PUBLISH RESULT</button>
                 </div>
             </div>
-            <div class="lg:col-span-2 bg-white rounded-[2rem] shadow-xl overflow-hidden flex flex-col min-h-[500px]">
-                <div class="p-6 border-b bg-slate-50 font-black text-xs uppercase tracking-widest">Preview Window</div>
-                <div id="pre-cont" class="p-6 overflow-auto text-slate-300 flex items-center justify-center italic h-full text-center">Select file to preview...</div>
+            <div class="lg:col-span-2 bg-white rounded-[2.5rem] shadow-xl overflow-hidden min-h-[500px] flex flex-col border border-slate-100">
+                <div class="p-6 border-b bg-slate-50 flex justify-between items-center">
+                    <h2 class="font-black uppercase text-xs tracking-widest">Dataset Preview</h2>
+                </div>
+                <div id="preview-container" class="p-6 overflow-auto text-slate-300 italic flex items-center justify-center flex-grow text-center">Dataset preview will appear here...</div>
             </div>
         </div>
 
-        <div id="v-mg" class="hidden bg-white rounded-[2rem] shadow-xl overflow-hidden">
+        <div id="view-mg" class="hidden bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
             <table class="w-full text-left">
                 <thead class="bg-slate-50 border-b">
                     <tr>
-                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400">Exam Details</th>
-                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400 text-right">Action</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase text-slate-400 tracking-widest">Examination Details</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="mg-table" class="divide-y divide-slate-100"></tbody>
+                <tbody id="manage-table" class="divide-y divide-slate-100 font-bold"></tbody>
             </table>
         </div>
     </main>
 
     <script type="module">
-        import { auth, db, doc, setDoc, onAuthStateChanged, collection, getDocs, deleteDoc, getDoc, signOut, serverTimestamp } from './firebase-config.js';
+        import { auth, db, doc, setDoc, onAuthStateChanged, signOut, collection, getDocs, deleteDoc, getDoc, serverTimestamp } from './firebase-config.js';
         import { renderNavbar } from './components.js';
 
-        let excelData = [], headers = [], records = new Map();
+        let excelData = [], headers = [], recordsMap = new Map();
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) return window.location.href = 'Login.html';
+        onAuthStateChanged(auth, async user => {
+            if(!user) return window.location.href = 'Login.html';
             const userSnap = await getDoc(doc(db, "users", user.uid));
-            if (userSnap.exists() && userSnap.data().role === 'admin' && userSnap.data().isApproved === true) {
+            if(userSnap.exists() && userSnap.data().role === 'admin' && userSnap.data().isApproved === true) {
                 document.getElementById('nav-container').appendChild(renderNavbar(user));
                 lucide.createIcons();
-                init();
+                document.getElementById('nav-logout-btn').onclick = () => signOut(auth).then(() => location.reload());
+                setupOptions();
             } else {
-                alert("Unauthorized Access!");
-                await signOut(auth);
-                window.location.href = 'Login.html';
+                alert("Unauthorized Access."); await signOut(auth); window.location.href = 'Login.html';
             }
         });
 
-        function init() {
-            const years = ["2024", "2025", "2026"], classes = ["Class 8", "Class 9", "Class 10"], exams = ["Half Yearly", "Final Exam"];
-            document.getElementById('sel-year').innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
-            document.getElementById('sel-class').innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
-            document.getElementById('sel-exam').innerHTML = exams.map(e => `<option value="${e}">${e}</option>`).join('');
+        function setupOptions() {
+            const years = ["2024", "2025", "2026", "2027"];
+            const classes = ["Class 6", "Class 7", "Class 8", "Class 9", "Class 10"];
+            const exams = ["Half Yearly", "Final Examination", "Test Exam"];
+            document.getElementById('up-year').innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+            document.getElementById('up-class').innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            document.getElementById('up-exam').innerHTML = exams.map(e => `<option value="${e}">${e}</option>`).join('');
         }
 
-        document.getElementById('file-in').onchange = (e) => {
+        document.getElementById('file-input').onchange = e => {
             const file = e.target.files[0];
             const reader = new FileReader();
-            reader.onload = (evt) => {
-                const wb = XLSX.read(evt.target.result, { type: 'binary' });
+            reader.onload = evt => {
+                const bstr = evt.target.result;
+                const wb = XLSX.read(bstr, { type: 'binary' });
                 const ws = wb.Sheets[wb.SheetNames[0]];
                 excelData = XLSX.utils.sheet_to_json(ws);
                 headers = XLSX.utils.sheet_to_json(ws, { header: 1 })[0];
-                document.getElementById('pre-cont').innerHTML = `<table class="w-full text-[10px]"><tr>${headers.map(h => `<th class='p-2 border bg-slate-50'>${h}</th>`).join('')}</tr>${excelData.slice(0, 5).map(r => `<tr>${headers.map(h => `<td class='p-2 border'>${r[h] || '-'}</td>`).join('')}</tr>`).join('')}</table>`;
-                document.getElementById('pub-btn').classList.remove('hidden');
+                renderPreview();
             };
             reader.readAsBinaryString(file);
         };
 
-        document.getElementById('pub-btn').onclick = async () => {
-            const y = document.getElementById('sel-year').value, c = document.getElementById('sel-class').value, e = document.getElementById('sel-exam').value;
-            await setDoc(doc(db, "results", `${y}_${c}_${e}`), { year: y, className: c, examName: e, data: excelData, headers, createdAt: serverTimestamp() });
-            alert("Data Published!"); location.reload();
+        function renderPreview() {
+            const cont = document.getElementById('preview-container');
+            cont.innerHTML = `<table class="w-full text-[10px] text-slate-600 border-collapse">
+                <tr class="bg-slate-50 font-black uppercase">${headers.map(h => `<th class="p-3 border">${h}</th>`).join('')}</tr>
+                ${excelData.slice(0, 5).map(r => `<tr>${headers.map(h => `<td class="p-3 border">${r[h] || '-'}</td>`).join('')}</tr>`).join('')}
+            </table>`;
+            cont.classList.remove('italic', 'flex', 'items-center', 'justify-center');
+            document.getElementById('publish-btn').classList.remove('hidden');
+        }
+
+        document.getElementById('publish-btn').onclick = async () => {
+            const y = document.getElementById('up-year').value, c = document.getElementById('up-class').value, e = document.getElementById('up-exam').value;
+            const docId = `${y}_${c}_${e}`;
+            await setDoc(doc(db, "results", docId), { year: y, className: c, examName: e, data: excelData, headers, createdAt: serverTimestamp() });
+            alert("Data Published Successfully!"); location.reload();
         };
 
-        document.getElementById('btn-mg').onclick = async () => {
-            document.getElementById('v-up').classList.add('hidden');
-            document.getElementById('v-mg').classList.remove('hidden');
+        document.getElementById('tab-up').onclick = () => {
+            document.getElementById('view-up').classList.remove('hidden');
+            document.getElementById('view-mg').classList.add('hidden');
+            document.getElementById('tab-up').className = "px-8 py-2.5 rounded-xl font-black bg-white text-blue-600 text-xs uppercase transition-all";
+            document.getElementById('tab-mg').className = "px-8 py-2.5 rounded-xl font-black text-slate-500 text-xs uppercase transition-all";
+        };
+
+        document.getElementById('tab-mg').onclick = async () => {
+            document.getElementById('view-up').classList.add('hidden');
+            document.getElementById('view-mg').classList.remove('hidden');
+            document.getElementById('tab-mg').className = "px-8 py-2.5 rounded-xl font-black bg-white text-blue-600 text-xs uppercase transition-all";
+            document.getElementById('tab-up').className = "px-8 py-2.5 rounded-xl font-black text-slate-500 text-xs uppercase transition-all";
+            
             const snap = await getDocs(collection(db, "results"));
-            const tbody = document.getElementById('mg-table');
+            const tbody = document.getElementById('manage-table');
             tbody.innerHTML = '';
             snap.forEach(d => {
-                records.set(d.id, d.data());
-                tbody.innerHTML += `<tr><td class='px-8 py-5'><b>${d.id}</b></td><td class='px-8 py-5 text-right'><button onclick="exportData('${d.id}')" class='text-blue-600 font-bold mx-2'>Export</button><button onclick="delData('${d.id}')" class='text-red-500 font-bold'>Delete</button></td></tr>`;
+                recordsMap.set(d.id, d.data());
+                tbody.innerHTML += `<tr class="hover:bg-slate-50">
+                    <td class="px-8 py-6 uppercase text-sm">${d.id.replace(/_/g, ' • ')}</td>
+                    <td class="px-8 py-6 text-right space-x-4">
+                        <button onclick="exportRecord('${d.id}')" class="text-blue-600 hover:underline">Export</button>
+                        <button onclick="deleteRecord('${d.id}')" class="text-red-500 hover:underline">Delete</button>
+                    </td>
+                </tr>`;
             });
         };
 
-        window.exportData = (id) => {
-            const rec = records.get(id);
+        window.exportRecord = id => {
+            const rec = recordsMap.get(id);
             const ws = XLSX.utils.json_to_sheet(rec.data, { header: rec.headers });
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Result");
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
             XLSX.writeFile(wb, `${id}.xlsx`);
         };
 
-        window.delData = async (id) => {
+        window.deleteRecord = async id => {
             if(confirm("Confirm Delete?")) { await deleteDoc(doc(db, "results", id)); location.reload(); }
         };
     </script>
