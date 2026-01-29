@@ -3,301 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduResult - Admin Center</title>
+    <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.full.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; overflow-x: hidden; }
-        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .profile-dialog { display: none; position: absolute; right: 0; top: 110%; width: 260px; z-index: 100; }
-        .profile-dialog.active { display: block; animation: fadeIn 0.2s ease-out; }
-        .btn-hover { transition: all 0.2s ease; }
-        .btn-hover:active { transform: scale(0.96); }
-    </style>
 </head>
-<body class="min-h-screen flex flex-col">
-    <nav class="bg-white border-b sticky top-0 z-[60] py-3 shadow-sm">
-        <div class="container mx-auto px-6 flex justify-between items-center relative">
-            <div class="flex items-center gap-2 font-black text-2xl tracking-tighter text-slate-800">
-                <div class="bg-blue-600 p-1.5 rounded-lg text-white"><i data-lucide="shield-check"></i></div>
-                EduResult <span class="text-xs text-blue-600 ml-2 font-black uppercase bg-blue-50 px-2 py-0.5 rounded">Admin</span>
-            </div>
-            
-            <div class="relative">
-                <button id="profile-trigger" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 p-1.5 pr-4 rounded-full transition-all">
-                    <div class="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-white font-bold text-xs uppercase" id="user-initial">A</div>
-                    <span class="text-xs font-black text-slate-700 hidden sm:block uppercase tracking-wider">Account</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                </button>
-
-                <div id="profile-dialog" class="profile-dialog glass-card rounded-2xl shadow-2xl p-6 border border-slate-200 overflow-hidden">
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-3 flex items-center justify-center text-white shadow-xl">
-                            <i data-lucide="user" class="w-8 h-8"></i>
-                        </div>
-                        <h4 class="font-black text-slate-900 uppercase text-xs tracking-widest">Administrator</h4>
-                        <p id="user-email" class="text-[10px] text-slate-400 font-bold truncate"></p>
-                    </div>
-                    <div class="space-y-2">
-                        <a href="/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 text-xs font-black text-slate-600 transition-all">
-                            <i data-lucide="layout" class="w-4 h-4"></i> View Website
-                        </a>
-                        <button id="nav-logout-btn" class="w-full flex items-center gap-3 p-3 rounded-xl bg-red-50 hover:bg-red-100 text-xs font-black text-red-600 transition-all">
-                            <i data-lucide="log-out" class="w-4 h-4"></i> Logout System
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl fade-in">
-        <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="space-y-1">
-                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Control Panel</h1>
-                <p class="text-sm text-slate-500 font-medium tracking-tight">Manage results and publication data securely.</p>
-            </div>
-            <div class="flex bg-slate-200/50 p-1.5 rounded-2xl backdrop-blur-sm">
-                <button id="tab-upload" class="px-8 py-2.5 rounded-xl font-black bg-white text-blue-600 shadow-xl shadow-slate-200/50 text-xs uppercase tracking-widest transition-all">Upload</button>
-                <button id="tab-manage" class="px-8 py-2.5 rounded-xl font-black text-slate-500 hover:text-slate-800 text-xs uppercase tracking-widest transition-all">Records</button>
+<body class="bg-slate-50 min-h-screen">
+    <div class="p-6 max-w-7xl mx-auto space-y-6">
+        <div class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border">
+            <h1 class="text-2xl font-black text-slate-800">Results Manager</h1>
+            <div class="flex gap-3">
+                <button id="export-csv" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Export CSV</button>
+                <button id="export-json" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold">Export JSON</button>
             </div>
         </div>
 
-        <div id="view-upload" class="grid lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-1 space-y-6">
-                <div class="glass-card p-8 rounded-3xl shadow-xl space-y-5">
-                    <h2 class="font-black text-lg flex items-center gap-2 text-slate-800"><i data-lucide="layers" class="text-blue-600"></i> Set Metadata</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Academic Year</label>
-                            <select id="up-year" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-blue-500 transition-all font-bold text-sm shadow-sm"></select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Class Name</label>
-                            <select id="up-class" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-blue-500 transition-all font-bold text-sm shadow-sm"></select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Exam Type</label>
-                            <select id="up-exam" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-blue-500 transition-all font-bold text-sm shadow-sm"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-8 rounded-3xl shadow-xl text-center border-t-4 border-t-green-500">
-                    <h2 class="font-black text-lg mb-6 flex items-center justify-center gap-2"><i data-lucide="file-spreadsheet" class="text-green-600"></i> Import Data</h2>
-                    <div class="border-2 border-dashed border-slate-200 rounded-2xl p-10 hover:border-blue-400 transition-all cursor-pointer relative group bg-white/50">
-                        <input type="file" id="file-input" accept=".xlsx, .xls" class="absolute inset-0 opacity-0 cursor-pointer">
-                        <i data-lucide="upload" class="w-12 h-12 text-slate-300 mx-auto mb-4 group-hover:text-blue-500 transition-colors"></i>
-                        <p class="text-xs font-black text-slate-600 uppercase">Attach Excel File</p>
-                    </div>
-                </div>
+        <div id="results-list" class="grid gap-4">
             </div>
-            
-            <div class="lg:col-span-2 space-y-6">
-                <div class="glass-card rounded-3xl shadow-xl flex flex-col min-h-[550px] overflow-hidden">
-                    <div class="p-6 border-b flex justify-between items-center bg-white/30">
-                        <h2 class="font-black uppercase text-[10px] tracking-widest text-slate-500">Dataset Preview</h2>
-                        <button id="publish-btn" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hidden shadow-2xl shadow-blue-200 btn-hover">Publish Records</button>
-                    </div>
-                    <div id="preview-container" class="p-6 flex-grow overflow-auto custom-scrollbar italic text-slate-400 text-center flex items-center justify-center">
-                        Select a file to preview student records.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-manage" class="hidden glass-card rounded-3xl shadow-xl overflow-hidden">
-            <div class="p-6 border-b bg-white/30 flex justify-between items-center">
-                <h2 class="font-black uppercase text-[10px] tracking-widest text-slate-500">System Records</h2>
-                <button id="refresh-btn" class="bg-slate-100 p-2 rounded-xl text-slate-500 hover:text-blue-600 transition-all"><i data-lucide="rotate-cw" class="w-5 h-5"></i></button>
-            </div>
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left min-w-[800px]">
-                    <thead class="bg-slate-50 border-b">
-                        <tr>
-                            <th class="px-8 py-5 font-black text-slate-400 text-[10px] uppercase tracking-widest">Publication Details</th>
-                            <th class="px-8 py-5 font-black text-slate-400 text-[10px] uppercase tracking-widest text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="manage-table-body" class="divide-y divide-slate-100"></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <div id="view-modal" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-7xl max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
-            <div class="p-6 border-b flex items-center justify-between bg-slate-50">
-                <div>
-                    <h3 id="modal-title" class="text-xl font-black text-slate-900 uppercase">Record Preview</h3>
-                    <p id="modal-subtitle" class="text-[10px] font-bold text-slate-500 uppercase mt-1 tracking-widest"></p>
-                </div>
-                <button id="close-modal" class="p-3 hover:bg-slate-200 rounded-2xl transition-all"><i data-lucide="x" class="w-6 h-6"></i></button>
-            </div>
-            <div id="modal-content" class="flex-grow overflow-auto p-6 custom-scrollbar"></div>
-        </div>
     </div>
 
     <script type="module">
-        import { auth, db, doc, setDoc, serverTimestamp, onAuthStateChanged, signOut, collection, getDocs, deleteDoc } from '../firebase-config.js';
-        
-        const YEAR_OPTIONS = ["2024", "2025", "2026", "2027"];
-        const CLASS_OPTIONS = Array.from({ length: 10 }, (_, i) => `Class ${i + 1}`);
-        const EXAM_OPTIONS = ["Half Yearly", "Final Examination", "Model Test", "Pre-Test"];
+        import { db, collection, getDocs } from '../firebase-config.js';
+        import { exportData } from '../components.js';
 
-        function populateOptions() {
-            document.getElementById('up-year').innerHTML = YEAR_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            document.getElementById('up-class').innerHTML = CLASS_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            document.getElementById('up-exam').innerHTML = EXAM_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-        }
-        populateOptions();
+        let currentData = [];
 
-        let excelData = [], headers = [], recordsMap = new Map();
-
-        // Auth Observer
-        onAuthStateChanged(auth, user => {
-            if (!user) {
-                window.location.href = './login.html';
-            } else {
-                document.getElementById('user-email').innerText = user.email;
-                document.getElementById('user-initial').innerText = user.email.charAt(0).toUpperCase();
-            }
-        });
-
-        // Profile Dialog Toggle
-        const profileTrigger = document.getElementById('profile-trigger');
-        const profileDialog = document.getElementById('profile-dialog');
-        profileTrigger.onclick = (e) => {
-            e.stopPropagation();
-            profileDialog.classList.toggle('active');
-        };
-        document.onclick = () => profileDialog.classList.remove('active');
-
-        // Logout
-        document.getElementById('nav-logout-btn').onclick = () => signOut(auth);
-
-        // Tab Navigation
-        const tUpload = document.getElementById('tab-upload'), tManage = document.getElementById('tab-manage'), vUpload = document.getElementById('view-upload'), vManage = document.getElementById('view-manage');
-        
-        tUpload.onclick = () => {
-            tUpload.className = "px-8 py-2.5 rounded-xl font-black bg-white text-blue-600 shadow-xl shadow-slate-200/50 text-xs uppercase tracking-widest transition-all";
-            tManage.className = "px-8 py-2.5 rounded-xl font-black text-slate-500 hover:text-slate-800 text-xs uppercase tracking-widest transition-all";
-            vUpload.classList.remove('hidden'); vManage.classList.add('hidden');
-        };
-
-        tManage.onclick = () => {
-            tManage.className = "px-8 py-2.5 rounded-xl font-black bg-white text-blue-600 shadow-xl shadow-slate-200/50 text-xs uppercase tracking-widest transition-all";
-            tUpload.className = "px-8 py-2.5 rounded-xl font-black text-slate-500 hover:text-slate-800 text-xs uppercase tracking-widest transition-all";
-            vManage.classList.remove('hidden'); vUpload.classList.add('hidden');
-            fetchRecords();
-        };
-
-        // File Processing
-        document.getElementById('file-input').onchange = (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const bstr = evt.target.result;
-                const wb = XLSX.read(bstr, { type: 'binary' });
-                const ws = wb.Sheets[wb.SheetNames[0]];
-                excelData = XLSX.utils.sheet_to_json(ws);
-                headers = XLSX.utils.sheet_to_json(ws, { header: 1 })[0];
-                renderPreview();
-            };
-            reader.readAsBinaryString(file);
-        };
-
-        function renderPreview() {
-            const cont = document.getElementById('preview-container');
-            cont.innerHTML = `
-                <div class="border rounded-xl overflow-hidden shadow-sm bg-white">
-                    <table class="w-full text-left text-[10px] min-w-max">
-                        <thead class="bg-slate-50 font-black uppercase text-slate-400">
-                            <tr>${headers.map(h => `<th class="px-5 py-3 border-b border-r">${h}</th>`).join('')}</tr>
-                        </thead>
-                        <tbody>
-                            ${excelData.slice(0, 10).map(row => `<tr>${headers.map(h => `<td class="px-5 py-2.5 border-b border-r text-slate-600 font-bold">${row[h] || '-'}</td>`).join('')}</tr>`).join('')}
-                        </tbody>
-                    </table>
-                    <div class="p-3 bg-slate-50 text-center font-black text-slate-400 text-[9px] uppercase">Previewing first 10 rows</div>
-                </div>
-            `;
-            cont.classList.remove('italic', 'flex', 'items-center', 'justify-center');
-            document.getElementById('publish-btn').classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        document.getElementById('publish-btn').onclick = async () => {
-            const y = document.getElementById('up-year').value;
-            const c = document.getElementById('up-class').value;
-            const e = document.getElementById('up-exam').value;
-            const docId = `${y}_${c}_${e}`;
-            
-            try {
-                await setDoc(doc(db, "results", docId), { year: y, className: c, examName: e, data: excelData, headers, createdAt: serverTimestamp() });
-                alert("Data Published Successfully!");
-                location.reload();
-            } catch(err) { alert(err.message); }
-        };
-
-        async function fetchRecords() {
+        async function loadResults() {
             const snap = await getDocs(collection(db, "results"));
-            const tbody = document.getElementById('manage-table-body');
-            tbody.innerHTML = '';
-            snap.forEach(d => {
-                const data = d.data();
-                recordsMap.set(d.id, data);
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition-colors";
-                tr.innerHTML = `
-                    <td class="px-8 py-6">
-                        <div class="font-black text-slate-800 uppercase text-sm">${data.examName}</div>
-                        <div class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">${data.year} • ${data.className} • ${data.data.length} Records</div>
-                    </td>
-                    <td class="px-8 py-6 text-right space-x-2">
-                        <button onclick="window.viewRecord('${d.id}')" class="bg-slate-900 text-white text-[9px] font-black uppercase px-5 py-2 rounded-lg btn-hover">View</button>
-                        <button onclick="window.deleteRecord('${d.id}')" class="bg-red-50 text-red-600 text-[9px] font-black uppercase px-5 py-2 rounded-lg btn-hover">Delete</button>
-                    </td>
+            const container = document.getElementById('results-list');
+            container.innerHTML = '';
+            
+            snap.forEach(doc => {
+                const res = doc.data();
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border flex justify-between items-center";
+                card.innerHTML = `
+                    <div>
+                        <h3 class="font-black text-slate-800">${res.examName} - ${res.className}</h3>
+                        <p class="text-xs text-slate-400">Year: ${res.year} | Students: ${res.data.length}</p>
+                    </div>
+                    <button class="view-btn bg-slate-100 hover:bg-slate-200 p-2 rounded-lg" data-id="${doc.id}">
+                        <i data-lucide="eye" class="w-5 h-5 text-slate-600"></i>
+                    </button>
                 `;
-                tbody.appendChild(tr);
+                container.appendChild(card);
+                
+                // এক্সপোর্টের জন্য ডাটা জমা রাখা
+                card.querySelector('.view-btn').onclick = () => {
+                    currentData = res.data;
+                    alert("Data selected for " + res.examName + ". Use Export buttons above.");
+                };
             });
             lucide.createIcons();
         }
 
-        window.viewRecord = (id) => {
-            const rec = recordsMap.get(id);
-            document.getElementById('modal-title').innerText = rec.examName;
-            document.getElementById('modal-subtitle').innerText = `${rec.year} • ${rec.className}`;
-            document.getElementById('modal-content').innerHTML = `
-                <table class="w-full text-left text-[10px] border">
-                    <thead class="bg-slate-100 font-black uppercase">
-                        <tr>${rec.headers.map(h => `<th class="px-4 py-3 border">${h}</th>`).join('')}</tr>
-                    </thead>
-                    <tbody>
-                        ${rec.data.map(row => `<tr>${rec.headers.map(h => `<td class="px-4 py-2 border font-bold text-slate-600">${row[h] || '-'}</td>`).join('')}</tr>`).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('view-modal').classList.remove('hidden');
-        };
+        document.getElementById('export-csv').onclick = () => exportData(currentData, 'csv');
+        document.getElementById('export-json').onclick = () => exportData(currentData, 'json');
 
-        window.deleteRecord = async (id) => {
-            if(confirm("Are you sure?")) {
-                await deleteDoc(doc(db, "results", id));
-                fetchRecords();
-            }
-        };
-
-        document.getElementById('close-modal').onclick = () => document.getElementById('view-modal').classList.add('hidden');
-        document.getElementById('refresh-btn').onclick = fetchRecords;
-        lucide.createIcons();
+        loadResults();
     </script>
 </body>
 </html>
