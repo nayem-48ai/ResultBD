@@ -40,7 +40,7 @@ export function renderMarksheet(data, meta) {
                 </div>
 
                 <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200 mb-6 grid grid-cols-2 gap-x-6 sm:gap-x-12 gap-y-4">
-                    <div><b class="text-[9px] text-slate-400 uppercase">Student Name:</b> <p class="font-black text-slate-900 text-xs sm:text-sm uppercase truncate">${(data['Name'] || data['Student Name'] || 'N/A')}</p></div>
+                    <div><b class="text-[9px] text-slate-400 uppercase">Student Name:</b> <p class="font-black text-slate-900 text-xs sm:text-sm uppercase">${(data['Name'] || data['Student Name'] || 'N/A')}</p></div>
                     <div><b class="text-[9px] text-slate-400 uppercase">Roll Number:</b> <p class="font-black text-slate-900 text-xs sm:text-sm">${data['Roll No'] || data['Roll'] || 'N/A'}</p></div>
                     <div><b class="text-[9px] text-slate-400 uppercase">Class:</b> <p class="font-black text-slate-900 text-xs sm:text-sm">${meta.className}</p></div>
                     <div><b class="text-[9px] text-slate-400 uppercase">Session:</b> <p class="font-black text-slate-900 text-xs sm:text-sm">${meta.year}</p></div>
