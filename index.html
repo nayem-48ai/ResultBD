@@ -8,52 +8,46 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f0f2f5; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; }
         
-        /* Web View: এক স্ক্রিনে রিপোর্ট দেখানোর জন্য ম্যাজিক */
+        /* Mobile View Auto-Fit Logic */
         #printable-area { 
             width: 100%; 
             display: flex; 
             justify-content: center; 
-            align-items: flex-start;
-            padding: 10px;
+            padding: 20px 0;
+            overflow: hidden;
         }
 
         .a4-container {
-            aspect-ratio: 1 / 1.414; /* A4 Ratio */
-            width: 100%;
-            max-width: 800px; /* ডেস্কটপের জন্য */
+            width: 210mm;
+            height: 297mm;
             background: white;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.3s ease;
+            transform-origin: top center;
+            border: 6px double #000;
         }
 
-        /* মোবাইলে যাতে স্ক্রল ছাড়া দেখা যায় */
-        @media (max-width: 640px) {
+        @media (max-width: 800px) {
+            /* মোবাইলে স্ক্রিন অনুযায়ী অটো ছোট হবে */
+            #printable-area { height: 100vh; align-items: center; padding: 0; }
             .a4-container {
-                max-width: 100%;
-                padding: 15px !important;
-                border-width: 3px !important;
-                border-radius: 12px !important;
+                transform: scale(calc(100vw / 230mm)); /* স্ক্রিন অনুযায়ী স্কেলিং */
+                box-shadow: none;
             }
-            main { padding-top: 1rem !important; }
+            #result-view { margin-top: 0; }
         }
 
         @media print {
             @page { size: A4; margin: 0; }
-            body { background: white !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; }
+            body { background: white !important; overflow: visible !important; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
             #printable-area { 
-                position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; padding: 0; margin: 0; 
-            }
-            .a4-container {
-                width: 210mm !important; height: 297mm !important;
-                border-radius: 0 !important; box-shadow: none !important;
-                border: 6px double #000 !important;
+                position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; transform: scale(1) !important; padding: 0; margin: 0; 
             }
             .no-print { display: none !important; }
         }
@@ -65,26 +59,26 @@
     <main class="flex-grow container mx-auto px-4 py-6 max-w-6xl">
         <div id="search-section" class="no-print">
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-black text-slate-900 mb-2">Academic <span class="text-blue-600">Portal</span></h1>
-                <p class="text-slate-500 text-sm">Download your digital transcript instantly.</p>
+                <h1 class="text-4xl font-black text-slate-900 mb-2 tracking-tighter">Academic <span class="text-blue-600">Portal</span></h1>
+                <p class="text-slate-500 text-sm font-medium">Instantly access and print your mark report card.</p>
             </div>
-            <div class="max-w-md mx-auto bg-white p-8 rounded-[2rem] shadow-xl space-y-5 border border-slate-100">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
-                    <select id="year-select" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold"></select>
-                    <select id="class-select" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold"></select>
+                    <select id="year-select" class="w-full p-4 bg-slate-50 border rounded-xl font-bold text-sm outline-none focus:ring-2 ring-blue-500"></select>
+                    <select id="class-select" class="w-full p-4 bg-slate-50 border rounded-xl font-bold text-sm outline-none focus:ring-2 ring-blue-500"></select>
                 </div>
-                <select id="exam-select" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold"></select>
-                <input type="text" id="roll-input" placeholder="Roll Number" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold">
-                <button id="search-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-blue-600 transition-all">
-                    <i data-lucide="search" class="w-5 h-5"></i> FETCH RESULT
+                <select id="exam-select" class="w-full p-4 bg-slate-50 border rounded-xl font-bold text-sm outline-none focus:ring-2 ring-blue-500"></select>
+                <input type="text" id="roll-input" placeholder="Enter Roll Number" class="w-full p-4 bg-slate-50 border rounded-xl font-bold text-sm outline-none focus:ring-2 ring-blue-500">
+                <button id="search-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-blue-600 transition-all active:scale-95 shadow-lg">
+                    <i data-lucide="search" class="w-5 h-5"></i> FETCH REPORT
                 </button>
             </div>
         </div>
 
         <div id="result-view" class="hidden space-y-4">
-            <div class="flex justify-between items-center no-print">
-                <button onclick="location.reload()" class="text-slate-500 font-bold text-xs uppercase flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> BACK</button>
-                <button onclick="window.print()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-black text-xs flex items-center gap-2"><i data-lucide="printer" class="w-4 h-4"></i> PRINT PDF</button>
+            <div class="flex justify-between items-center no-print px-2">
+                <button onclick="location.reload()" class="text-slate-500 font-bold text-[10px] uppercase flex items-center gap-1 bg-white px-4 py-2 rounded-full shadow-sm"><i data-lucide="arrow-left" class="w-3 h-3"></i> BACK</button>
+                <button onclick="window.print()" class="bg-green-600 text-white px-6 py-2 rounded-full font-black text-[10px] uppercase flex items-center gap-2 shadow-lg hover:bg-green-700 transition-all"><i data-lucide="printer" class="w-4 h-4"></i> PRINT PDF</button>
             </div>
             <div id="printable-area"></div>
         </div>
@@ -95,8 +89,9 @@
         import { renderNavbar, renderMarksheet } from './components.js';
 
         onAuthStateChanged(auth, user => {
+            const nav = renderNavbar(user);
             document.getElementById('nav-container').innerHTML = '';
-            document.getElementById('nav-container').appendChild(renderNavbar(user));
+            document.getElementById('nav-container').appendChild(nav);
             lucide.createIcons();
             if(user) document.getElementById('nav-logout-btn').onclick = () => signOut(auth).then(() => location.reload());
         });
@@ -112,7 +107,7 @@
 
         document.getElementById('search-btn').onclick = async () => {
             const y = yS.value, c = cS.value, e = eS.value, roll = document.getElementById('roll-input').value;
-            if(!y || !c || !e || !roll) return alert("All fields are required!");
+            if(!y || !c || !e || !roll) return alert("Fill all fields");
 
             const snap = await getDoc(doc(db, "results", `${y}_${c}_${e}`));
             if(snap.exists()) {
@@ -124,7 +119,7 @@
                     document.getElementById('printable-area').innerHTML = renderMarksheet(found, results);
                     lucide.createIcons();
                 } else alert("Roll not found!");
-            } else alert("Dataset not available!");
+            } else alert("Result not found!");
         };
     </script>
 </body>
