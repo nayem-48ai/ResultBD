@@ -8,56 +8,48 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-    body { font-family: 'Inter', sans-serif; background: #fcfcfd; margin: 0; }
-    
-    #printable-area { width: 100%; display: flex; justify-content: center; padding: 1.5rem; }
-
-    @media print {
-        @page { 
-            size: A4; 
-            margin: 5mm; /* প্রিন্টারের সেফ মার্জিন */
-        }
-        html, body { 
-            height: auto; 
-            background: white !important; 
-        }
-        body * { visibility: hidden !important; }
-        #printable-area, #printable-area * { visibility: visible !important; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; overflow-x: hidden; }
         
         #printable-area { 
-            position: absolute; 
-            left: 0; 
-            top: 0; 
             width: 100%; 
-            display: block;
-            padding: 0;
-            margin: 0;
+            display: flex; 
+            justify-content: center; 
+            padding: 20px 10px;
         }
-        
+
         .a4-container {
-            width: 190mm !important; /* বর্ডারটি আর একটু ভিতরে আনার জন্য */
-            margin: 0 auto !important;
-            border: 6px double #000 !important;
-            padding: 8mm !important;
-            box-shadow: none !important;
-            transform: scale(0.98); /* এক পেজে আটকাতে হালকা স্কেলিং */
-            transform-origin: top center;
+            width: 85%;
+            max-width: 800px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
         }
-        
-        /* কালার যাতে ধূসর না দেখায় */
-        .print-dark { 
-            background-color: #000 !important; 
-            color: #fff !important; 
-            -webkit-print-color-adjust: exact; 
-            print-color-adjust: exact;
+
+        @media (max-width: 640px) {
+            .a4-container { border-width: 2px !important; border-radius: 8px; }
         }
-        .no-print { display: none !important; }
-    }
 
-    .fade-in { animation: fadeIn 0.6s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-</style>
-
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background: white !important; margin: 0 !important; padding: 0 !important; }
+            body * { visibility: hidden !important; }
+            #printable-area, #printable-area * { visibility: visible !important; }
+            #printable-area { 
+                position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; padding: 0; margin: 0; 
+            }
+            .a4-container {
+                width: 210mm !important; height: 297mm !important;
+                border: 6px double #000 !important; /* আগের সেই পারফেক্ট বর্ডার */
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            .no-print { display: none !important; }
+            /* প্রিন্টে কালার যাতে ধূসর না হয় তার জন্য ফোর্স ব্ল্যাক */
+            .print-force-dark { background-color: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col">
     <nav class="bg-white border-b no-print py-4 shadow-sm">
