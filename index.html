@@ -10,33 +10,31 @@
     <style>
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
         
-        /* রেজাল্ট কন্টেইনারের জন্য ক্লিন লুক */
         .result-sheet {
             background: white;
             width: 100%;
             max-width: 850px;
             margin: 0 auto;
-            padding: 40px;
+            padding: 30px; /* ওয়েব ভিউতে একটু প্যাডিং */
         }
 
         @media print {
-            @page { size: A4; margin: 10mm; }
+            @page { size: A4; margin: 5mm; } /* মার্জিন একদম কমিয়ে ৫মিমি করা হলো */
+            html, body { height: 99%; } /* এক পেজ নিশ্চিত করতে */
             body { background: white !important; margin: 0 !important; }
             .no-print { display: none !important; }
             .result-sheet { 
-                padding: 0 !important; 
+                padding: 15px !important; /* প্রিন্টে প্যাডিং কমানো হলো */
                 width: 100% !important;
                 max-width: 100% !important;
                 box-shadow: none !important;
+                border: none !important;
             }
-            /* কালার প্রিন্ট নিশ্চিত করতে */
             .print-bg-dark { background-color: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
-            .print-border-dark { border-color: #000 !important; }
         }
 
-        /* মোবাইল ভিউতে কার্ড ইফেক্ট কমানো */
         @media (max-width: 640px) {
-            .result-sheet { padding: 20px 15px; }
+            .result-sheet { padding: 15px; }
         }
     </style>
 </head>
@@ -51,8 +49,8 @@
         </div>
     </nav>
 
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div id="search-section" class="no-print max-w-md mx-auto bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+    <main class="flex-grow container mx-auto px-4 py-6">
+        <div id="search-section" class="no-print max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <h2 class="text-2xl font-black mb-6 text-center">Search Result</h2>
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
@@ -61,7 +59,7 @@
                 </div>
                 <select id="exam-select" class="w-full p-3 bg-slate-50 border rounded-lg font-semibold outline-none"></select>
                 <input type="text" id="roll-input" placeholder="Enter Roll Number" class="w-full p-3 bg-slate-50 border rounded-lg font-semibold">
-                <button id="search-btn" class="w-full bg-slate-900 text-white py-4 rounded-lg font-bold hover:bg-blue-700 flex items-center justify-center gap-2 transition-all">
+                <button id="search-btn" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-blue-700 flex items-center justify-center gap-2 transition-all">
                     <i data-lucide="search" class="w-4 h-4"></i> FETCH DATA
                 </button>
             </div>
@@ -99,7 +97,7 @@
             const snap = await getDoc(doc(db, "results", docId));
             if(snap.exists()) {
                 const results = snap.data();
-                const found = results.data.find(r => String(r['Roll No'] || r['Roll']).trim() === roll.trim());
+                const found = results.data.find(r => String(r['Roll No'] || r['Roll'] || r['ID']).trim().toLowerCase() === roll.trim().toLowerCase());
                 if(found) {
                     document.getElementById('search-section').classList.add('hidden');
                     document.getElementById('result-view').classList.remove('hidden');
