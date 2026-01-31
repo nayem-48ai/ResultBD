@@ -1,85 +1,93 @@
 // --- components.js ---
-
 export function renderMarksheet(data, meta) {
-    const metaFields = ['Name', 'Student Name', 'Student', 'Roll No', 'ID', 'Roll Number', 'Student ID', 'Roll', 'Total', 'Total Marks', 'Total Aggregate', 'Percentage', 'Average', 'Avg', 'Grade', 'GPA', 'Result', 'Status'];
+    const metaFields = ['Name', 'Student Name', 'Student', 'Roll No', 'ID', 'Roll Number', 'Roll', 'Total', 'Percentage', 'Grade', 'GPA', 'Result', 'Status'];
+    const subjects = Object.entries(data).filter(([k]) => !metaFields.includes(k)).sort();
     
-    const subjects = Object.entries(data)
-        .filter(([k]) => !metaFields.includes(k))
-        .sort((a, b) => a[0].localeCompare(b[0]));
-
-    // সঠিক ডাটা ম্যাপিং নিশ্চিত করা
-    const totalMarks = data['Total'] || data['Total Marks'] || data['Aggregate Total'] || '0';
-    const percentage = data['Percentage'] || data['Average'] || 'N/A';
-    const grade = data['Grade'] || 'N/A';
-    const outcome = String(data['Result'] || data['Status'] || 'PASS').toUpperCase();
-    const isFailed = outcome.includes('FAIL');
+    const outcome = (data['Result'] || 'PASS').toUpperCase();
+    const isPass = outcome === 'PASS';
 
     return `
-        <div class="a4-container p-8 sm:p-10 border-[6px] border-double border-slate-900 bg-white mx-auto shadow-2xl">
-            <div class="flex-grow">
-                <div class="text-center border-b-2 border-slate-800 pb-3 mb-5">
-                    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight uppercase">Hat Madhnogor High School</h1>
-                    <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest">Recognition No: HM-9922 | Estd: 1970</p>
-                    <div class="mt-3 print-force-dark bg-slate-900 text-white inline-block px-10 py-1.5 rounded-full font-black uppercase text-[10px] tracking-[0.2em]">Academic Report Card</div>
-                </div>
-
-                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-5 grid grid-cols-2 gap-x-12 gap-y-3">
-                    <div><b class="text-[9px] text-slate-400 uppercase">Student Name:</b> <p class="font-black text-slate-900 text-xs sm:text-sm uppercase truncate">${(data['Name'] || data['Student Name'] || 'N/A')}</p></div>
-                    <div><b class="text-[9px] text-slate-400 uppercase">Roll Number:</b> <p class="font-black text-slate-900 text-xs sm:text-sm">${data['Roll No'] || data['Roll'] || 'N/A'}</p></div>
-                    <div><b class="text-[9px] text-slate-400 uppercase">Class:</b> <p class="font-black text-slate-900 text-xs sm:text-sm">${meta.className}</p></div>
-                    <div><b class="text-[9px] text-slate-400 uppercase">Session:</b> <p class="font-black text-slate-900 text-xs sm:text-sm">${meta.year}</p></div>
-                </div>
-
-                <div class="text-center mb-3 uppercase font-black text-lg italic tracking-widest text-slate-800 border-b-2 border-slate-100 pb-1">${meta.examName}</div>
-
-                <div class="border-2 border-slate-800 rounded-xl overflow-hidden mb-5">
-                    <table class="w-full text-sm">
-                        <thead class="print-force-dark bg-slate-900 text-white uppercase text-[10px]">
-                            <tr><th class="p-3 text-left">Subject Description</th><th class="p-3 text-center w-28">Marks</th></tr>
-                        </thead>
-                        <tbody class="text-slate-900">
-                            ${subjects.map(([s, m]) => `
-                                <tr class="border-b border-slate-200">
-                                    <td class="p-2.5 font-bold italic text-slate-700">${s}</td>
-                                    <td class="p-2.5 text-center font-black">${m}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                        <tfoot class="bg-slate-50 font-black border-t-2 border-slate-800">
-                            <tr>
-                                <td class="p-3 uppercase text-[10px] tracking-wider">Aggregate Total Calculation</td>
-                                <td class="p-3 text-center text-lg">${totalMarks}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-                <div class="grid grid-cols-3 gap-5 mb-8">
-                    <div class="p-3 bg-blue-50 border border-blue-100 rounded-2xl text-center">
-                        <p class="text-[9px] font-bold text-blue-500 uppercase">Percentage</p>
-                        <p class="text-lg sm:text-xl font-black text-blue-900">${percentage}%</p>
-                    </div>
-                    <div class="p-3 bg-green-50 border border-green-100 rounded-2xl text-center">
-                        <p class="text-[9px] font-bold text-green-500 uppercase">Grade</p>
-                        <p class="text-lg sm:text-xl font-black text-green-900">${grade}</p>
-                    </div>
-                    <div class="print-force-dark ${isFailed ? 'bg-red-600' : 'bg-slate-900'} p-3 rounded-2xl text-center text-white">
-                        <p class="text-[9px] font-bold opacity-70 uppercase">Outcome</p>
-                        <p class="text-lg sm:text-xl font-black tracking-widest uppercase">${outcome}</p>
-                    </div>
+        <div class="a4-wrapper shadow-sm border border-slate-100">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight leading-none mb-1">HAT MADHNOGOR HIGH SCHOOL</h1>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">RECOGNITION NO: HM-9922 | ESTD: 1970</p>
+                
+                <div class="inline-block border-2 border-black px-6 py-1 font-black uppercase text-xs tracking-tighter bg-black text-white">
+                    Academic Report Card
                 </div>
             </div>
 
-            <div class="mt-auto pt-4">
-                <div class="flex justify-between items-end border-t-2 border-slate-800 pt-6">
-                    <img src="https://i.ibb.co.com/HDqfKG6K/Seal-school.png" class="h-16 sm:h-20 object-contain">
+            <div class="grid grid-cols-2 gap-y-2 text-sm mb-6 border-b-2 border-slate-100 pb-6">
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-400 w-24 uppercase text-[10px]">Student Name:</span>
+                    <span class="font-black text-slate-900 uppercase">${data['Name'] || data['Student Name'] || 'N/A'}</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-400 w-24 uppercase text-[10px]">Roll Number:</span>
+                    <span class="font-black text-slate-900">${data['Roll No'] || data['Roll'] || 'N/A'}</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-400 w-24 uppercase text-[10px]">Class:</span>
+                    <span class="font-black text-slate-900 uppercase">${meta.className}</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="font-bold text-slate-400 w-24 uppercase text-[10px]">Session:</span>
+                    <span class="font-black text-slate-900">${meta.year}</span>
+                </div>
+            </div>
+
+            <div class="text-center font-black italic text-lg uppercase mb-4 border-b pb-1 text-slate-700">
+                ${meta.examName}
+            </div>
+
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th class="p-3">Subject Description</th>
+                        <th class="p-3 text-center w-24">Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${subjects.map(([s, m]) => `
+                        <tr>
+                            <td class="font-medium text-slate-700 italic">${s}</td>
+                            <td class="text-center font-black">${m}</td>
+                        </tr>
+                    `).join('')}
+                    <tr class="bg-slate-50">
+                        <td class="font-black uppercase text-[10px]">Aggregate Total Calculation</td>
+                        <td class="text-center font-black text-lg">${data['Total'] || 'N/A'}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="grid grid-cols-3 gap-4 my-8">
+                <div class="text-center p-3 border-2 border-slate-100 rounded-xl">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">Percentage</div>
+                    <div class="text-xl font-black text-slate-900">${data['Percentage'] || '0'}%</div>
+                </div>
+                <div class="text-center p-3 border-2 border-slate-100 rounded-xl">
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">Grade</div>
+                    <div class="text-xl font-black text-slate-900">${data['Grade'] || 'F'}</div>
+                </div>
+                <div class="text-center p-3 border-2 ${isPass ? 'bg-black border-black text-white' : 'bg-red-600 border-red-600 text-white'} rounded-xl shadow-lg">
+                    <div class="text-[9px] font-bold opacity-70 uppercase">Outcome</div>
+                    <div class="text-xl font-black italic uppercase">${outcome}</div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <div class="flex justify-between items-end border-t border-slate-200 pt-8">
+                    <img src="https://i.ibb.co.com/HDqfKG6K/Seal-school.png" class="h-20 object-contain">
                     <div class="text-center">
-                        <img src="https://i.ibb.co.com/1C0fss2/Tarikul-sign.png" class="h-10 sm:h-14 object-contain mx-auto mb-1">
-                        <div class="w-40 border-b-2 border-slate-900 mb-1 mx-auto"></div>
-                        <p class="text-[9px] font-black uppercase text-slate-900">Controller of Examinations</p>
+                        <img src="https://i.ibb.co.com/1C0fss2/Tarikul-sign.png" class="h-10 mx-auto mb-1">
+                        <div class="w-32 border-b-2 border-black mx-auto mb-1"></div>
+                        <p class="text-[10px] font-black uppercase">Controller of Examinations</p>
                     </div>
                 </div>
-                <p class="text-center text-[8px] text-slate-400 font-bold uppercase tracking-[0.4em] mt-4">* OFFICIAL ACADEMIC TRANSCRIPT *</p>
+                <p class="text-center text-[8px] text-slate-400 font-bold uppercase tracking-[0.5em] mt-8">
+                    * OFFICIAL ACADEMIC TRANSCRIPT *
+                </p>
             </div>
         </div>
     `;
