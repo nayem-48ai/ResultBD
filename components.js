@@ -1,21 +1,21 @@
 // --- components.js ---
+// --- components.js ---
+
 export function renderMarksheet(data, meta) {
     const metaFields = ['Name', 'Student Name', 'Student', 'Roll No', 'ID', 'Roll Number', 'Roll', 'Total', 'Total Marks', 'Percentage', 'Average', 'Grade', 'GPA', 'Result', 'Status'];
     const subjects = Object.entries(data).filter(([k]) => !metaFields.includes(k)).sort();
 
-    // ডাটা ফিক্স এবং ডিফল্ট ভ্যালু সেট করা
     const outcome = String(data['Result'] || data['Status'] || 'PASS').toUpperCase();
     const total = data['Total'] || data['Total Marks'] || data['Aggregate Total'] || 'N/A';
-    // এক্সেল ফাইলে 'Percentage' অথবা 'Average' নামে কলাম থাকতে হবে
     const percentage = data['Percentage'] || data['Average'] || 'N/A'; 
     const overallGrade = data['Grade'] || data['GPA'] || 'N/A';
 
     return `
-        <div class="result-sheet text-slate-900 relative overflow-hidden">
+        <div class="result-sheet text-slate-900 relative overflow-hidden font-sans">
             <div class="text-center mb-6 relative z-10">
-                <img src="https://i.ibb.co.com/HDqfKG6K/Seal-school.png" class="absolute top-0 left-1/2 transform -translate-x-1/2 h-24 opacity-[0.08] pointer-events-none">
+                <img src="https://i.ibb.co.com/HDqfKG6K/Seal-school.png" class="absolute top-0 right-4 h-24 opacity-[0.50] pointer-events-none mix-blend-multiply">
                 
-                <h1 class="text-2xl sm:text-3xl font-extrabold uppercase relative">Hat Madhnogor High School</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight">Hat Madhnogor High School</h1>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Recognition No: HM-9922 | Established: 1970</p>
                 
                 <div class="mt-3 inline-block">
@@ -57,29 +57,26 @@ export function renderMarksheet(data, meta) {
                 </table>
             </div>
 
-            <div class="grid grid-cols-3 gap-3 mb-6 relative z-10">
-                <div class="border border-slate-200 p-2 rounded-xl text-center">
+            <div class="grid grid-cols-3 gap-3 items-end relative z-10">
+                
+                <div class="border border-slate-200 p-2 rounded-xl text-center h-full flex flex-col justify-center">
                     <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Percentage</p>
                     <p class="text-lg font-black text-blue-600">${percentage}%</p>
                 </div>
-                <div class="border border-slate-200 p-2 rounded-xl text-center">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Letter Grade</p>
-                    <p class="text-lg font-black text-green-600">${overallGrade}</p>
-                </div>
-                <div class="print-bg-dark bg-slate-900 p-2 rounded-xl text-center text-white">
-                    <p class="text-[9px] font-bold opacity-60 uppercase mb-1">Outcome</p>
-                    <p class="text-lg font-black uppercase tracking-tighter">${outcome}</p>
-                </div>
-            </div>
 
-            <div class="flex justify-end items-end border-t border-slate-200 pt-4 relative z-10">
-                <div class="text-center">
-                    <img src="https://i.ibb.co.com/1C0fss2/Tarikul-sign.png" class="h-10 object-contain mx-auto">
-                    <p class="text-[8px] font-bold uppercase text-slate-900 mt-1">Controller of Examinations</p>
+                <div class="print-bg-dark bg-slate-900 p-2 rounded-xl text-center text-white h-full flex flex-col justify-center">
+                    <p class="text-[9px] font-bold opacity-60 uppercase mb-1">Result</p>
+                    <p class="text-xl font-black uppercase tracking-widest">${outcome}</p>
+                </div>
+
+                <div class="text-center pb-1">
+                    <img src="https://i.ibb.co.com/1C0fss2/Tarikul-sign.png" class="h-10 object-contain mx-auto mb-1">
+                    <div class="w-full border-b border-slate-900 mb-1"></div>
+                    <p class="text-[7px] font-extrabold uppercase text-slate-900">Controller of Examinations</p>
                 </div>
             </div>
             
-            <div class="text-center mt-6 relative z-10">
+            <div class="text-center mt-8 relative z-10">
                 <p class="text-[7px] text-slate-400 font-bold uppercase tracking-[0.5em]">* COMPUTER GENERATED OFFICIAL TRANSCRIPT *</p>
             </div>
         </div>
