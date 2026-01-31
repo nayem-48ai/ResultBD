@@ -63,9 +63,9 @@ export function renderMarksheet(data, meta) {
                     <p class="text-lg font-black text-blue-600">${percentage}%</p>
                 </div>
 
-                <div class="print-bg-dark bg-slate-900 p-2 rounded-xl text-center text-white h-full flex flex-col justify-center">
-                    <p class="text-[9px] font-bold opacity-60 uppercase mb-1">Result</p>
-                    <p class="text-xl font-black uppercase tracking-widest">${outcome}</p>
+                <div class="border border-slate-200 p-2 rounded-xl text-center h-full flex flex-col justify-center">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Result Status</p>
+                    <p class="text-xl font-black uppercase tracking-widest ${outcome === 'FAIL' ? 'text-red-600' : 'text-slate-900'}">${outcome}</p>
                 </div>
 
                 <div class="text-center pb-1">
