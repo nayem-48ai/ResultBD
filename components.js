@@ -1,5 +1,4 @@
 // --- components.js ---
-// --- components.js ---
 
 export function renderMarksheet(data, meta) {
     const metaFields = ['Name', 'Student Name', 'Student', 'Roll No', 'ID', 'Roll Number', 'Roll', 'Total', 'Total Marks', 'Percentage', 'Average', 'Grade', 'GPA', 'Result', 'Status'];
@@ -13,7 +12,7 @@ export function renderMarksheet(data, meta) {
     return `
         <div class="result-sheet text-slate-900 relative overflow-hidden font-sans">
             <div class="text-center mb-6 relative z-10">
-                <img src="https://i.ibb.co.com/HDqfKG6K/Seal-school.png" class="absolute top-0 right-4 h-24 opacity-[0.50] pointer-events-none mix-blend-multiply">
+                <img src="https://i.ibb.co.com/HDqfKG6K/Seal-school.png" class="absolute top-10 right-4 h-24 opacity-[0.50] pointer-events-none mix-blend-multiply">
                 
                 <h1 class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight">Hat Madhnogor High School</h1>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Recognition No: HM-9922 | Established: 1970</p>
