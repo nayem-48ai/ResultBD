@@ -10,41 +10,30 @@
     <style>
         body { font-family: 'Inter', sans-serif; background: #f8fafc; overflow-x: hidden; }
         
-        /* Web View UI Layout */
         #printable-area { 
             width: 100%; 
             display: flex; 
             justify-content: center; 
-            align-items: flex-start;
-            padding: 10px;
+            padding: 20px 10px;
         }
 
         .a4-container {
-            aspect-ratio: 1 / 1.414; /* A4 Ratio */
             width: 100%;
             max-width: 800px;
             background: white;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            border: 1px solid #e2e8f0;
         }
 
-        /* মোবাইল স্ক্রল-ফ্রি ম্যাজিক */
         @media (max-width: 640px) {
-            .a4-container {
-                max-width: 100%;
-                padding: 15px !important;
-                border-width: 3px !important;
-                border-radius: 12px !important;
-            }
-            main { padding-top: 1rem !important; }
+            .a4-container { border-width: 2px !important; border-radius: 8px; }
         }
 
-        /* প্রফেশনাল প্রিন্ট সেটআপ */
         @media print {
             @page { size: A4; margin: 0; }
-            body { background: white !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; }
+            body { background: white !important; margin: 0 !important; padding: 0 !important; }
             body * { visibility: hidden !important; }
             #printable-area, #printable-area * { visibility: visible !important; }
             #printable-area { 
@@ -52,10 +41,13 @@
             }
             .a4-container {
                 width: 210mm !important; height: 297mm !important;
-                border-radius: 0 !important; box-shadow: none !important;
-                border: 6px double #000 !important;
+                border: 6px double #000 !important; /* আগের সেই পারফেক্ট বর্ডার */
+                box-shadow: none !important;
+                border-radius: 0 !important;
             }
             .no-print { display: none !important; }
+            /* প্রিন্টে কালার যাতে ধূসর না হয় তার জন্য ফোর্স ব্ল্যাক */
+            .print-force-dark { background-color: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -72,27 +64,27 @@
 
     <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         <div id="search-section" class="no-print">
-            <div class="text-center mb-10">
-                <h1 class="text-4xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">Search <span class="text-blue-600">Marksheet</span></h1>
-                <p class="text-slate-500">Official Academic Result Verification System</p>
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-black text-slate-900 mb-2">Academic <span class="text-blue-600">Portal</span></h1>
+                <p class="text-slate-500">Hat Madhnogor High School Result System</p>
             </div>
-            <div class="max-w-md mx-auto bg-white p-8 rounded-[2.5rem] shadow-2xl border border-slate-50 space-y-4">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-[2rem] shadow-xl space-y-4 border border-slate-100">
                 <div class="grid grid-cols-2 gap-4">
-                    <select id="year-select" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-blue-100 transition-all"></select>
-                    <select id="class-select" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-blue-100 transition-all"></select>
+                    <select id="year-select" class="w-full p-4 bg-slate-50 border rounded-xl font-bold outline-none"></select>
+                    <select id="class-select" class="w-full p-4 bg-slate-50 border rounded-xl font-bold outline-none"></select>
                 </div>
-                <select id="exam-select" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-blue-100 transition-all"></select>
-                <input type="text" id="roll-input" placeholder="Enter Roll Number" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-blue-100 transition-all">
-                <button id="search-btn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-3">
-                    <i data-lucide="search" class="w-5 h-5"></i> VIEW REPORT CARD
+                <select id="exam-select" class="w-full p-4 bg-slate-50 border rounded-xl font-bold outline-none"></select>
+                <input type="text" id="roll-input" placeholder="Roll Number" class="w-full p-4 bg-slate-50 border rounded-xl font-bold outline-none">
+                <button id="search-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black hover:bg-blue-700 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="search" class="w-5 h-5"></i> VIEW MARKSHEET
                 </button>
             </div>
         </div>
 
-        <div id="result-view" class="hidden space-y-6">
-            <div class="flex justify-between items-center no-print max-w-[800px] mx-auto px-2">
-                <button onclick="location.reload()" class="text-slate-500 font-black text-xs uppercase flex items-center gap-1 hover:text-blue-600"><i data-lucide="arrow-left" class="w-4 h-4"></i> NEW SEARCH</button>
-                <button onclick="window.print()" class="bg-green-600 text-white px-8 py-3 rounded-xl font-black text-xs flex items-center gap-2 shadow-xl shadow-green-100 hover:scale-105 transition-transform"><i data-lucide="printer" class="w-4 h-4"></i> DOWNLOAD PDF</button>
+        <div id="result-view" class="hidden space-y-4">
+            <div class="flex justify-between items-center no-print max-w-[800px] mx-auto">
+                <button onclick="location.reload()" class="text-slate-500 font-bold text-xs uppercase flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> BACK</button>
+                <button onclick="window.print()" class="bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-xs flex items-center gap-2 shadow-lg"><i data-lucide="printer" class="w-4 h-4"></i> PRINT A4 COPY</button>
             </div>
             <div id="printable-area"></div>
         </div>
@@ -105,7 +97,6 @@
         lucide.createIcons();
         const yS = document.getElementById('year-select'), cS = document.getElementById('class-select'), eS = document.getElementById('exam-select');
 
-        // Initial Data Fetch
         getDocs(collection(db, "results")).then(snap => {
             const ySet = new Set(), cSet = new Set(), eSet = new Set();
             snap.forEach(d => { const data = d.data(); ySet.add(data.year); cSet.add(data.className); eSet.add(data.examName); });
@@ -116,19 +107,19 @@
 
         document.getElementById('search-btn').onclick = async () => {
             const y = yS.value, c = cS.value, e = eS.value, roll = document.getElementById('roll-input').value;
-            if(!y || !c || !e || !roll) return alert("Please fill all fields");
+            if(!y || !c || !e || !roll) return alert("Fill all fields");
 
             const snap = await getDoc(doc(db, "results", `${y}_${c}_${e}`));
             if(snap.exists()) {
                 const results = snap.data();
-                const found = results.data.find(r => String(r['Roll No'] || r['ID'] || r['Roll']).trim().toLowerCase() === roll.trim().toLowerCase());
+                const found = results.data.find(r => String(r['Roll No'] || r['Roll'] || r['ID']).trim().toLowerCase() === roll.trim().toLowerCase());
                 if(found) {
                     document.getElementById('search-section').classList.add('hidden');
                     document.getElementById('result-view').classList.remove('hidden');
                     document.getElementById('printable-area').innerHTML = renderMarksheet(found, results);
                     lucide.createIcons();
                 } else alert("Roll not found!");
-            } else alert("Result dataset not published yet!");
+            } else alert("Data not found!");
         };
     </script>
 </body>
