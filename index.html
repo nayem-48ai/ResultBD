@@ -24,46 +24,98 @@
             border-radius: 8px;
         }
 
+        /* প্রিন্ট স্টাইল - এখানে পরিবর্তন করেছি */
         @media print {
-            @page { 
-                size: A4 portrait; 
-                margin: 0; 
+            @page {
+                size: A4;
+                margin: 15mm 10mm;
             }
-            html, body { 
-                height: auto; 
-                margin: 0 !important; 
+            
+            html, body {
+                height: auto !important;
+                margin: 0 !important;
                 padding: 0 !important;
                 background: white !important;
-                overflow: hidden !important;
+                font-size: 12px !important;
+                line-height: 1.4 !important;
             }
-            body * {
-                visibility: hidden;
+            
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
-            .result-sheet, .result-sheet * {
-                visibility: visible;
+            
+            /* সব নন-প্রিন্ট এলিমেন্ট লুকানো */
+            .no-print, .no-print * {
+                display: none !important;
             }
+            
+            /* শুধু প্রিন্ট এরিয়া দেখানো */
+            #printable-area, #printable-area * {
+                display: block !important;
+                visibility: visible !important;
+            }
+            
+            /* বাকি সব লুকানো */
+            body > *:not(#printable-area) {
+                display: none !important;
+            }
+            
+            /* রেজাল্ট শিট স্টাইল */
             .result-sheet {
-                position: absolute;
-                left: 0;
-                top: 0;
                 width: 100% !important;
                 max-width: 100% !important;
-                margin: 0 !important;
-                padding: 20px 30px !important;
+                margin: 0 auto !important;
+                padding: 5mm !important;
                 box-shadow: none !important;
                 border: none !important;
                 background: white !important;
                 page-break-inside: avoid !important;
+                page-break-before: avoid !important;
                 page-break-after: avoid !important;
             }
-            .no-print { 
-                display: none !important; 
+            
+            /* টেবিল স্টাইল অপটিমাইজ */
+            table {
+                page-break-inside: avoid !important;
+                border-collapse: collapse !important;
             }
-            .print-bg-dark { 
-                background-color: #000 !important; 
-                color: #fff !important; 
-                -webkit-print-color-adjust: exact !important; 
+            
+            tr {
+                page-break-inside: avoid !important;
+                page-break-after: auto !important;
+            }
+            
+            /* কালার প্রিন্ট নিশ্চিত করা */
+            .print-bg-dark {
+                background-color: #000000 !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+            }
+            
+            /* ইমেজ প্রিন্ট নিশ্চিত করা */
+            img {
+                max-height: 80mm !important;
+            }
+            
+            /* ফন্ট সাইজ কমিয়ে দেওয়া */
+            .result-sheet h1 {
+                font-size: 18pt !important;
+            }
+            
+            .result-sheet p, .result-sheet td, .result-sheet th {
+                font-size: 10pt !important;
+            }
+            
+            /* মার্জিন কমিয়ে দেওয়া */
+            .result-sheet > div {
+                margin-bottom: 5mm !important;
+            }
+            
+            /* প্রিন্ট হাইড করার জন্য */
+            .print-hidden {
+                display: none !important;
             }
         }
 
@@ -77,19 +129,22 @@
             align-items: center;
             gap: 8px;
         }
-
+        
         /* মোবাইল ভিউ অপটিমাইজেশন */
         @media (max-width: 640px) {
             .result-sheet {
                 padding: 15px;
             }
             
-            .grid-cols-1-sm-2 {
-                grid-template-columns: 1fr;
-            }
-            
             #search-section {
                 padding: 15px;
+            }
+        }
+        
+        /* প্রিন্ট প্রিভিউ অপটিমাইজেশন */
+        @media screen {
+            .print-only {
+                display: none;
             }
         }
     </style>
@@ -134,7 +189,7 @@
             </div>
         </div>
 
-        <div id="result-view" class="hidden space-y-4">
+        <div id="result-view" class="no-print space-y-4">
             <div class="flex justify-between items-center no-print max-w-[850px] mx-auto px-2">
                 <button onclick="location.reload()" class="text-slate-500 font-bold text-xs uppercase flex items-center gap-1"><i data-lucide="chevron-left" class="w-4 h-4"></i> Back to Search</button>
                 <button onclick="window.print()" class="bg-green-600 text-white px-5 py-2 rounded-lg font-bold text-xs flex items-center gap-2 shadow-md"><i data-lucide="printer" class="w-4 h-4"></i> PRINT SHEET</button>
