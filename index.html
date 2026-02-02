@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academic Result Portal</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co.com/HDqfKG6K/Seal-school.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +34,6 @@
             .print-bg-dark { background-color: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
         }
 
-        /* ক্যাপচা বক্স স্টাইল */
         .captcha-box {
             background: #f1f5f9;
             border: 1px solid #e2e8f0;
@@ -41,6 +42,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* মোবাইল ফুটারের জন্য কাস্টম রেসপন্সিভ স্টাইল */
+        @media (max-width: 640px) {
+            .footer-text { font-size: 9px !important; }
+            .footer-sign { height: 16px !important; }
         }
     </style>
 </head>
@@ -51,7 +58,7 @@
                 <div class="bg-blue-600 p-1.5 rounded text-white"><i data-lucide="graduation-cap"></i></div>
                 EduResult
             </div>
-            <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Institutional Portal</div>
+            <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Name of a Institute</div>
         </div>
     </nav>
 
@@ -93,23 +100,36 @@
         </div>
     </main>
 
+    <footer id="main-footer" class="no-print bg-white border-t py-3">
+        <div class="container mx-auto px-2">
+            <div class="footer-text flex flex-row items-center justify-center gap-1.5 md:gap-2 text-slate-500 text-[11px] md:text-sm font-medium whitespace-nowrap">
+                <span>© 2026 All Rights Reserved</span>
+                <span class="text-slate-300">|</span>
+                <span class="font-bold text-slate-700">Institution Name</span>
+                <span class="text-slate-300">|</span>
+                <div class="flex items-center gap-1">
+                    <span>Developed by</span>
+                    <img src="https://i.ibb.co.com/1C0fss2/Tarikul-sign.png" alt="Dev" class="footer-sign h-5 md:h-7 w-auto object-contain">
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script type="module">
         import { db, collection, getDocs, doc, getDoc } from './firebase-config.js';
         import { renderMarksheet } from './components.js';
 
         let captchaAnswer;
 
-        // ক্যাপচা জেনারেটর ফাংশন
         window.generateCaptcha = function() {
-            const num1 = Math.floor(Math.random() * 10); // 0-9
-            const num2 = Math.floor(Math.random() * 10); // 0-9
+            const num1 = Math.floor(Math.random() * 10);
+            const num2 = Math.floor(Math.random() * 10);
             const isPlus = Math.random() > 0.5;
             
             if (isPlus) {
                 captchaAnswer = num1 + num2;
                 document.getElementById('captcha-question').innerText = `${num1} + ${num2} =`;
             } else {
-                // বিয়োগের ক্ষেত্রে বড় সংখ্যা আগে রাখা যাতে রেজাল্ট নেগেটিভ না হয়
                 const max = Math.max(num1, num2);
                 const min = Math.min(num1, num2);
                 captchaAnswer = max - min;
@@ -119,13 +139,11 @@
             lucide.createIcons();
         }
 
-        // ইনিশিয়াল লোড
         lucide.createIcons();
         generateCaptcha();
 
         const yS = document.getElementById('year-select'), cS = document.getElementById('class-select'), eS = document.getElementById('exam-select');
 
-        // ফিল্টার অপশন লোড
         getDocs(collection(db, "results")).then(snap => {
             const ySet = new Set(), cSet = new Set(), eSet = new Set();
             snap.forEach(d => { const data = d.data(); ySet.add(data.year); cSet.add(data.className); eSet.add(data.examName); });
@@ -139,7 +157,6 @@
             const userAnswer = parseInt(document.getElementById('captcha-input').value);
             const docId = `${yS.value}_${cS.value}_${eS.value}`;
 
-            // ভ্যালিডেশন
             if(!yS.value || !roll) return alert("Please select all fields!");
             if(isNaN(userAnswer)) return alert("Please solve the math equation!");
             if(userAnswer !== captchaAnswer) {
@@ -154,11 +171,12 @@
                 const found = results.data.find(r => String(r['Roll No'] || r['Roll'] || r['ID']).trim().toLowerCase() === roll.trim().toLowerCase());
                 if(found) {
                     document.getElementById('search-section').classList.add('hidden');
+                    document.getElementById('main-footer').classList.add('hidden');
                     document.getElementById('result-view').classList.remove('hidden');
                     document.getElementById('printable-area').innerHTML = renderMarksheet(found, results);
                     lucide.createIcons();
-                } else alert("Roll number not found in this exam!");
-            } else alert("Result database not found for this selection!");
+                } else alert("Roll number not found!");
+            } else alert("Database error!");
         };
     </script>
 </body>
