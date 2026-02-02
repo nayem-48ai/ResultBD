@@ -12,7 +12,7 @@ export function renderMarksheet(data, meta) {
     return `
         <div class="result-sheet text-slate-900 relative overflow-hidden font-sans">
             <div class="text-center mb-6 relative z-10">
-                <h1 class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight">Hat Madhnogor High School</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight">Name of an institution</h1>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Recognition No: HM-9922 | Established: 1970</p>
                 
                 <div class="mt-3 inline-block">
